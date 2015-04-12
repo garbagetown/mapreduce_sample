@@ -38,6 +38,7 @@ public class MyDriver extends Configured implements Tool {
 
         job.setMapperClass(MyMapper.class);
 
+        job.setNumReduceTasks(2);
         job.setReducerClass(MyReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
