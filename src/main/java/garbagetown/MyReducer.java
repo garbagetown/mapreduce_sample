@@ -1,7 +1,10 @@
 package garbagetown;
 
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -10,23 +13,20 @@ import java.util.Set;
 /**
  * Created by garbagetown on 4/2/15.
  */
-public class MyReducer extends Reducer<Text, Text, Text, Text> {
+public class MyReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
-    private Text result = new Text();
+    private static final Logger logger = LogManager.getLogger(MyReducer.class);
+    private IntWritable result = new IntWritable();
 
     @Override
-    protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+    protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
 
-        Set<String> ids = new HashSet<>();
-
-        int pv = 0;
-        for (Text value : values) {
-            ids.add(value.toString());
-            pv += 1;
+        int sum = 0;
+        for (IntWritable value : values) {
+            logger.info(value.get());
+            sum += value.get();
         }
-        int uu = ids.size();
-
-        result.set(pv + "\t" + uu);
+        result.set(sum);
 
         context.write(key, result);
     }

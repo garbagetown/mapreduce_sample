@@ -3,6 +3,7 @@ package garbagetown;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -33,10 +34,12 @@ public class MyDriver extends Configured implements Tool {
         }
 
         Job job = Job.getInstance();
-        job.setJobName("simple map reduce");
+        job.setJobName("count pv");
         job.setJarByClass(MyDriver.class);
 
         job.setMapperClass(MyMapper.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
 
         job.setNumReduceTasks(2);
         job.setReducerClass(MyReducer.class);
